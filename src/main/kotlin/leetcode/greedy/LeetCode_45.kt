@@ -1,7 +1,10 @@
 package leetcode.greedy
 
-fun main() {
+import log.log
 
+fun main() {
+    log(jump(intArrayOf(2, 2, 2, 1, 1, 0)))
+    log(jump(intArrayOf(2, 3, 1, 1, 4)))
 }
 
 /**
@@ -30,6 +33,22 @@ i + j < n
  */
 
 fun jump(nums: IntArray): Int {
-    val result = 0
-    return result
+    // 记录步数
+    var count = 0
+    // 当前最大覆盖范围
+    var curCover = 0
+    // 下一步最大覆盖范围
+    var nextCover = 0
+
+    for (i in 0 until nums.size - 1) {
+        // 更新下一步覆盖的最远距离下标
+        nextCover = Math.max(nextCover, i + nums[i])
+        // 遇到当前覆盖最远距离下标
+        if (i == curCover) {
+            // 更新当前覆盖的最远距离下标
+            curCover = nextCover
+            count++
+        }
+    }
+    return count
 }
