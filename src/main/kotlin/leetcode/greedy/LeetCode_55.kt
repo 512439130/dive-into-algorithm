@@ -28,7 +28,7 @@ fun main() {
 
 提示：
 1 <= nums.length <= 3 * 104
-0 <= nums[i] <= 105
+0 <= nums[ i ] <= 105
  */
 
 fun canJump(nums: IntArray): Boolean {
