@@ -61,9 +61,17 @@ path 是一个有效的 Unix 风格绝对路径。
 4. 此外，路径仅包含从根目录到目标文件或目录的路径上的目录（即，不含 '.' 或 '..'）。
 
  */
-
+var count = 0
 fun simplifyPath(path: String): String {
-    var count = 0
+
+    var sb = handle(path)
+    // 最后一个目录名（如果存在）不能 以 '/' 结尾
+    sb = endCheckLogic(sb)
+    if (sb.isEmpty()) sb.append('/')
+    return sb.toString()
+}
+
+private fun handle(path: String): StringBuilder {
     var sb = StringBuilder()
     for (i in path.indices) {
         val cur = path[i]
@@ -86,11 +94,7 @@ fun simplifyPath(path: String): String {
                 continue
             }
         }
-        if (cur == '.' && ((sb.endsWith('/')) || (((sb.substring(0,sb.length - 1)).endsWith('/')) && (sb.endsWith('.'))))) {
-            count++
-        } else {
-            count = 0
-        }
+        count = countLogic(cur, sb, count)
         if (cur == '/' && sb.endsWith('/')) continue
         if (cur == '.' && i == path.length - 1) {
             if (count == 1) {
@@ -109,13 +113,26 @@ fun simplifyPath(path: String): String {
         }
         sb.append(cur)
     }
-    // 最后一个目录名（如果存在）不能 以 '/' 结尾
-    if (sb.length != 1 && sb.endsWith('/')) {
-        for (j in sb.length - 1 downTo 0) {
-            if (sb[j] != '/') break
-            sb = StringBuilder(sb.substring(0, sb.length - 1))
+    return sb
+}
+
+private fun countLogic(cur: Char, sb: StringBuilder, count: Int): Int {
+    var count1 = count
+    if (cur == '.' && ((sb.endsWith('/')) || (((sb.substring(0, sb.length - 1)).endsWith('/')) && (sb.endsWith('.'))))) {
+        count1++
+    } else {
+        count1 = 0
+    }
+    return count1
+}
+
+private fun endCheckLogic(sb: StringBuilder): StringBuilder {
+    var sb1 = sb
+    if (sb1.length != 1 && sb1.endsWith('/')) {
+        for (j in sb1.length - 1 downTo 0) {
+            if (sb1[j] != '/') break
+            sb1 = StringBuilder(sb1.substring(0, sb1.length - 1))
         }
     }
-    if (sb.isEmpty()) sb.append('/')
-    return sb.toString()
+    return sb1
 }
